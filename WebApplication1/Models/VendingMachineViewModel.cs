@@ -12,5 +12,7 @@ namespace WebApplication1.Models
         public double TotalCashCollected;
 
         public double TotalCreditCollected;
+
+        public string RefundMessage;
     }
 }
