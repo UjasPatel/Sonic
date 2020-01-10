@@ -1,8 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@model VendingMachineViewModel
+<p>Vending Machine:</p>
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<form method="post">
+    <div>
+        Total Cans Left:
+        <label>@Html.DisplayFor(item => item.TotalCansLeft)</label>
+    </div>
+    <div>
+        Total Cash Collected:
+        <label>@Html.DisplayFor(item => item.TotalCashCollected)</label>        
+    </div>
+    <div>
+        Total Credit Collected:
+        <label>@Html.DisplayFor(item => item.TotalCreditCollected)</label>
+    </div>
+
+    <input type="submit" />
+</form>
+
+@*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -91,4 +110,4 @@
             <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
         </ul>
     </div>
-</div>
+</div>*@

@@ -23,7 +23,11 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            VendingMachineViewModel.TotalCansLeft = 20;
+            VendingMachineViewModel.TotalCashCollected = 0;
+            VendingMachineViewModel.TotalCreditCollected = 0;
+            VendingMachineViewModel.RefundMessage = string.Empty;
+            return View(VendingMachineViewModel);
         }
 
         public IActionResult About()
