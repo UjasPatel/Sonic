@@ -8,14 +8,17 @@
     <div>
         Total Cans Left:
         <label>@Html.DisplayFor(item => item.TotalCansLeft)</label>
+        @Html.TextBoxFor(s => s.TotalCansLeft, new { style = "display: none;" })
     </div>
     <div>
         Total Cash Collected:
         <label>@Html.DisplayFor(item => item.TotalCashCollected)</label>
+        @Html.TextBoxFor(s => s.TotalCashCollected, new { style = "display: none;" })
     </div>
     <div>
         Total Credit Collected:
         <label>@Html.DisplayFor(item => item.TotalCreditCollected)</label>
+        @Html.TextBoxFor(s => s.TotalCreditCollected, new { style = "display: none;" })
     </div>
 
     <input type="submit" />

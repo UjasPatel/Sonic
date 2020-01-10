@@ -33,6 +33,13 @@ namespace WebApplication1.Controllers
             return View(VendingMachineViewModel);
         }
 
+        [HttpPost]
+        public ActionResult Index(VendingMachineViewModel model)
+        {
+            model.TotalCashCollected = 4;
+            return View(model);
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
