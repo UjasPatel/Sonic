@@ -7,11 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using WebApplication1.Interface;
 
 namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IVendingMachineOperations _vendingMachineOperations;
+
+        public HomeController(IVendingMachineOperations vendingMachineOperations)
+        {
+            _vendingMachineOperations = vendingMachineOperations;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -75,6 +83,10 @@ namespace WebApplication1.Controllers
             return (price - paidMoney).ToString() + " still required to buy a can";
         }
 
+        /// <summary>
+        /// Just for Display
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetCanFlavours()
         {
             var flavours = new List<string>();
@@ -91,6 +103,10 @@ namespace WebApplication1.Controllers
             return flavours;
         }
 
+        /// <summary>
+        /// How many cans are still available in the machine
+        /// </summary>
+        /// <returns></returns>
         public int GetCurrentCanStocks()
         {
             // return total number of cans still available in machine

@@ -11507,11 +11507,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ujasp\\source\\repos\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectUniqueName": "C:\\Sonic\\WebApplication1\\WebApplication1.csproj",
       "projectName": "WebApplication1",
-      "projectPath": "C:\\Users\\ujasp\\source\\repos\\WebApplication1\\WebApplication1\\WebApplication1.csproj",
+      "projectPath": "C:\\Sonic\\WebApplication1\\WebApplication1.csproj",
       "packagesPath": "C:\\Users\\ujasp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ujasp\\source\\repos\\WebApplication1\\WebApplication1\\obj\\",
+      "outputPath": "C:\\Sonic\\WebApplication1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
