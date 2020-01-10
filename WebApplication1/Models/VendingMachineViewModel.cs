@@ -7,12 +7,12 @@ namespace WebApplication1.Models
 {
     public class VendingMachineViewModel
     {
-        public int TotalCansLeft;
+        public int? TotalCansLeft { get; set; }
 
-        public double TotalCashCollected;
+        public double? TotalCashCollected { get; set; }
 
-        public double TotalCreditCollected;
+        public double? TotalCreditCollected { get; set; }
 
-        public string RefundMessage;
+        public string RefundMessage { get; set; }
     }
 }
