@@ -28,16 +28,32 @@ namespace WebApplication1.Controllers
             if (VendingMachineViewModel.TotalCashCollected == null)
                 VendingMachineViewModel.TotalCashCollected = 0;
             if (VendingMachineViewModel.TotalCreditCollected == null)
-                VendingMachineViewModel.TotalCreditCollected = 0;            
+                VendingMachineViewModel.TotalCreditCollected = 0;
+            if (VendingMachineViewModel.TotalCansSold == null)
+                VendingMachineViewModel.TotalCansSold = 0;
 
             return View(VendingMachineViewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(VendingMachineViewModel model)
+        public ActionResult Index(VendingMachineViewModel model, string submit)
         {
-            model.TotalCashCollected = 4;
-            return View(model);
+            switch (submit)
+            {
+                case "Purchase":
+                    model.RefundMessage = _vendingMachineOperations.TakeMoneyAndRefund("a", 10, 12);
+                    model.TotalCansLeft -= 1;
+                    model.TotalCansSold += 1;
+                    return View(model);
+                case "Restock":
+                    model.TotalCansLeft += model.RestockNumber;
+                    model.TotalCashCollected = 0;
+                    model.TotalCreditCollected = 0;
+                    model.TotalCansSold = 0;
+                    return View(model);
+                default:
+                    return View(model);
+            }            
         }
 
         public IActionResult About()

@@ -14,5 +14,9 @@ namespace WebApplication1.Models
         public double? TotalCreditCollected { get; set; }
 
         public string RefundMessage { get; set; }
+
+        public int? RestockNumber { get; set; }
+
+        public int? TotalCansSold { get; set; }
     }
 }
