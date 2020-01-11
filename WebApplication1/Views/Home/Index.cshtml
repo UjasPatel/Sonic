@@ -6,44 +6,81 @@
 
 <form method="post">
     <p>* Hello my name is sonic and I am a vending machine.</p>
-    <p>* Please click purchase if you want to get a can of cold drink.</p>
+    <p>* Please click purchase if you want to get a can of cold drink. A can is worth 4.5$</p>
     <p>
         * If you want to restock the cans in machine, please click restock,
         you will be provided ion of entering how many cans you want to restock
     </p>
-    <div>
-        <div>
-            Total Cans Left:
-            <label>@Html.DisplayFor(item => item.TotalCansLeft, null, new { @class = "form-control" })</label>
-            @Html.TextBoxFor(s => s.TotalCansLeft, new { style = "display: none;" })
-        </div>
-        <div>
-            Total Cans Sold:
-            <label>@Html.DisplayFor(item => item.TotalCansSold, null, new { @class = "form-control" })</label>
-            @Html.TextBoxFor(s => s.TotalCansSold, new { style = "display: none;" })
-        </div>
-        <div>
-            Total Cash Collected:
-            <label>@Html.DisplayFor(item => item.TotalCashCollected, null, new { @class = "form-control" })</label>
-            @Html.TextBoxFor(s => s.TotalCashCollected, new { style = "display: none;" })
-        </div>
-        <div>
-            Total Credit Collected:
-            <label>@Html.DisplayFor(item => item.TotalCreditCollected, null, new { @class = "form-control" })</label>
-            @Html.TextBoxFor(s => s.TotalCreditCollected, new { style = "display: none;" })
-        </div>
-    </div>
 
-    <input type="submit" name="submit" value="Purchase" />
-    <div>
-        Restock following number of cans:
-        @Html.TextBoxFor(s => s.RestockNumber)
+    @Html.TextBoxFor(s => s.TotalCansLeft, new { style = "display: none;" })
+    @Html.TextBoxFor(s => s.TotalCansSold, new { style = "display: none;" })
+    @Html.TextBoxFor(s => s.TotalCashCollected, new { style = "display: none;" })
+    @Html.TextBoxFor(s => s.TotalCreditCollected, new { style = "display: none;" })
+
+    @if (Model.Operations == OperationEnum.Purchase)
+    {
+        @if (Model.CashCredit == WebApplication1.Enums.CashCreditEnum.none)
+        {
+            <input type="submit" name="submit" value="Cash" />
+            <input type="submit" name="submit" value="Credit Card" />
+        }
+        else
+        {
+            <div>
+                Enter Amount:
+                @Html.TextBoxFor(s => s.CashEntered)
+                @Html.TextBoxFor(s => s.CashCredit, new { style = "display: none;" })
+                <input type="submit" name="submit" value="Complete Purchase" />
+            </div>
+        }
+
+    }
+    else if (Model.Operations == OperationEnum.Restock)
+    {
+        <div>
+            Restock following number of cans:
+            @Html.TextBoxFor(s => s.RestockNumber)
+            <input type="submit" name="submit" value="Complete Restock" />
+        </div>
+    }
+    else
+    {
+        <div>
+            <div>
+                Total Cans Left:
+                <label>@Html.DisplayFor(item => item.TotalCansLeft, null, new { @class = "form-control" })</label>
+            </div>
+            <div>
+                Total Cans Sold:
+                <label>@Html.DisplayFor(item => item.TotalCansSold, null, new { @class = "form-control" })</label>
+            </div>
+            <div>
+                Total Cash Collected:
+                <label>@Html.DisplayFor(item => item.TotalCashCollected, null, new { @class = "form-control" })</label>
+            </div>
+            <div>
+                Total Credit Collected:
+                <label>@Html.DisplayFor(item => item.TotalCreditCollected, null, new { @class = "form-control" })</label>
+            </div>
+        </div>
+
+        <input type="submit" name="submit" value="Purchase" />
         <input type="submit" name="submit" value="Restock" />
+        @*<div>
+                Restock following number of cans:
+                @Html.TextBoxFor(s => s.RestockNumber)
+                <input type="submit" name="submit" value="Restock" />
+            </div>*@
+    }
+
+    <div>
+        <label>@Html.DisplayFor(item => item.RefundMessage, null, new { @class = "form-control" })</label>
+        @*@Html.TextBoxFor(s => s.RefundMessage, new { style = "display: none;" })*@
     </div>
 
     <div>
         <label>@Html.DisplayFor(item => item.ErrorMessage, null, new { @class = "form-control" })</label>
-        @Html.TextBoxFor(s => s.ErrorMessage, new { style = "display: none;" })
+        @*@Html.TextBoxFor(s => s.ErrorMessage, new { style = "display: none;" })*@
     </div>
 </form>
 

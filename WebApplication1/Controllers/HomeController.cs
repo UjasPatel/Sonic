@@ -41,23 +41,67 @@ namespace WebApplication1.Controllers
             switch (submit)
             {
                 case "Purchase":
-                    ModelState.Clear();
-                    model.RefundMessage = _vendingMachineOperations.TakeMoneyAndRefund("a", 4.5, 12);
-                    model.TotalCansLeft -= 1;
-                    model.TotalCansSold += 1;
-                    model.TotalCashCollected += 4.5;
+                    ModelState.Clear();                    
+                    model.Operations = OperationEnum.Purchase;                    
                     return View(model);
-                case "Restock":
+                case "Restock":                    
+                    ModelState.Clear();  
+                    model.Operations = OperationEnum.Restock;
+                    return View(model);
+                case "Complete Restock":
                     if (model.TotalCansLeft + model.RestockNumber > 20)
                     {
                         model.ErrorMessage = "Error: Only 20 cans can be inserted in vending machine at a time";
                         return View(model);
                     }
-                    ModelState.Clear();  
+                    ModelState.Clear();
                     model.TotalCansLeft += model.RestockNumber;
                     model.TotalCashCollected = 0;
                     model.TotalCreditCollected = 0;
                     model.TotalCansSold = 0;
+                    model.Operations = OperationEnum.Home;
+                    return View(model);
+                case "Complete Purchase":
+                    if(model.CashEntered == null)
+                    {
+                        model.ErrorMessage = "Please enter an amount to buy a can.";
+                        return View(model);
+                    }
+
+                    if (model.CashEntered < 4.5)
+                    {
+                        model.ErrorMessage = "Money entered was not enough. Please enter atleast 4.5$ in the machine. Please collect your change and try again!!";
+                        return View(model);
+                    }
+
+                    if (model.TotalCansLeft == 0)
+                    {
+                        model.ErrorMessage = "Sorry for inconvenience!! We have no cans left in machine anymore.";
+                        return View(model);
+                    }
+
+                    ModelState.Clear();
+                    model.RefundMessage = _vendingMachineOperations.TakeMoneyAndRefund("a", 4.5, model.CashEntered.Value);
+                    model.TotalCansLeft -= 1;
+                    model.TotalCansSold += 1;
+                    if (model.CashCredit == Enums.CashCreditEnum.cash)
+                    {
+                        model.TotalCashCollected += 4.5;
+                    }
+                    else if (model.CashCredit == Enums.CashCreditEnum.credit)
+                    {
+                        model.TotalCreditCollected += 4.5;
+                    }
+                    return View(model);
+                case "Cash":
+                    ModelState.Clear();
+                    model.Operations = OperationEnum.Purchase;
+                    model.CashCredit = Enums.CashCreditEnum.cash;
+                    return View(model);
+                case "Credit Card":
+                    ModelState.Clear();
+                    model.Operations = OperationEnum.Purchase;
+                    model.CashCredit = Enums.CashCreditEnum.credit;
                     return View(model);
                 default:
                     return View(model);
