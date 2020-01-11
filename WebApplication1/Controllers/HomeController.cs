@@ -41,11 +41,19 @@ namespace WebApplication1.Controllers
             switch (submit)
             {
                 case "Purchase":
-                    model.RefundMessage = _vendingMachineOperations.TakeMoneyAndRefund("a", 10, 12);
+                    ModelState.Clear();
+                    model.RefundMessage = _vendingMachineOperations.TakeMoneyAndRefund("a", 4.5, 12);
                     model.TotalCansLeft -= 1;
                     model.TotalCansSold += 1;
+                    model.TotalCashCollected += 4.5;
                     return View(model);
                 case "Restock":
+                    if (model.TotalCansLeft + model.RestockNumber > 20)
+                    {
+                        model.ErrorMessage = "Error: Only 20 cans can be inserted in vending machine at a time";
+                        return View(model);
+                    }
+                    ModelState.Clear();  
                     model.TotalCansLeft += model.RestockNumber;
                     model.TotalCashCollected = 0;
                     model.TotalCreditCollected = 0;

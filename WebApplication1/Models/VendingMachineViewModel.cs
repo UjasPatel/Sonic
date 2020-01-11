@@ -18,5 +18,7 @@ namespace WebApplication1.Models
         public int? RestockNumber { get; set; }
 
         public int? TotalCansSold { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }
