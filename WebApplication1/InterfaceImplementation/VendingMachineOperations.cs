@@ -31,12 +31,12 @@ namespace WebApplication1.InterfaceImplementation
             if (paidMoney > price)
             {
                 // need to deduct available stock by 1
-                return "Please Collect your can and change " + (paidMoney - price).ToString() + "$ from the machine. Thanks for your puchase!!";
+                return "Payment Successful. Please Collect your can and change " + (paidMoney - price).ToString() + "$ from the machine. Thanks for your purchase!!";
             }
             else if (paidMoney == price)
             {
                 // need to deduct available stock by 1
-                return "Please collect your can. Thanks for your purchase!!";
+                return "Payment Successful. Please collect your can. Thanks for your purchase!!";
             }
             return (price - paidMoney).ToString() + " still required to buy a can";
         }

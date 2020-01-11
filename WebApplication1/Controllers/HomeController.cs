@@ -49,6 +49,11 @@ namespace WebApplication1.Controllers
                     model.Operations = OperationEnum.Restock;
                     return View(model);
                 case "Complete Restock":
+                    if (model.RestockNumber == null)
+                    {
+                        model.ErrorMessage = "Error: Please enter number of cans to restock and Try Again!!";
+                        return View(model);
+                    }
                     if (model.TotalCansLeft + model.RestockNumber > 20)
                     {
                         model.ErrorMessage = "Error: Only 20 cans can be inserted in vending machine at a time";
