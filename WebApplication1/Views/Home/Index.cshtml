@@ -1,176 +1,231 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
 @model VendingMachineViewModel
+<html>
+<head>
+</head>
 
+<body @*style="background:url('images/vending-machines-base-1.jpg');background-size: cover;color:white;"*@>
+    
+   <br />
+    <h1 style="text-align:center">Vending Machine</h1>
+    <form method="post">
+        @*<header><h3>INSTRUCTIONS</h3></header>
+        <p>* Hello my name is sonic and I am a vending machine.</p>
+        <p>* Please click purchase if you want to get a can of cold drink. A can is worth 4.5$</p>
+        <p>
+            * If you want to restock the cans in machine, please click restock,
+            you will be provided ion of entering how many cans you want to restock
+        </p>*@
 
-<form method="post">
-    <p>* Hello my name is sonic and I am a vending machine.</p>
-    <p>* Please click purchase if you want to get a can of cold drink. A can is worth 4.5$</p>
-    <p>
-        * If you want to restock the cans in machine, please click restock,
-        you will be provided ion of entering how many cans you want to restock
-    </p>
-
-    @Html.TextBoxFor(s => s.TotalCansLeft, new { style = "display: none;" })
-    @Html.TextBoxFor(s => s.TotalCansSold, new { style = "display: none;" })
-    @Html.TextBoxFor(s => s.TotalCashCollected, new { style = "display: none;" })
-    @Html.TextBoxFor(s => s.TotalCreditCollected, new { style = "display: none;" })
-
-    @if (Model.Operations == OperationEnum.Purchase)
-    {
-        @if (Model.CashCredit == WebApplication1.Enums.CashCreditEnum.none)
-        {
-            <input type="submit" name="submit" value="Cash" />
-            <input type="submit" name="submit" value="Credit Card" />
-        }
-        else
-        {
-            <div>
-                Enter Amount:
-                @Html.TextBoxFor(s => s.CashEntered)
-                @Html.TextBoxFor(s => s.CashCredit, new { style = "display: none;" })
-                <input type="submit" name="submit" value="Complete Purchase" />
+        <hr style="    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0; " />
+        <div class="col-xs-7 col-sm-9">
+            @*<header><h3>CURRENT REPORTS</h3></header>*@
+            
+            <div style="text-align:right;margin-bottom:10px;margin-right:16px;">
+                <input type="submit" name="submit" value="Home" class="btn btn-primary" />
+                @if (Model.Operations == OperationEnum.Home)
+                {
+                    <input type="submit" name="submit" value="Restock" class="btn btn-primary" />
+                }    
             </div>
-        }
+            
+            @Html.TextBoxFor(s => s.TotalCansLeft, new { style = "display: none;" })
+            @Html.TextBoxFor(s => s.TotalCansSold, new { style = "display: none;" })
+            @Html.TextBoxFor(s => s.TotalCashCollected, new { style = "display: none;" })
+            @Html.TextBoxFor(s => s.TotalCreditCollected, new { style = "display: none;" })
+            @for (var i = 1; i <= 10; i++)
+            {
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 text-center">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
 
-    }
-    else if (Model.Operations == OperationEnum.Restock)
-    {
-        <div>
+                            Price: <strong>$4.5</strong>
+
+                            Item: <strong>@i</strong>
+                        </div>
+                        <div class="panel-body"><img src="@String.Format("images/img-{0}.jpg",@i)" style="height:60px" class="img-rounded img-responsive center-block"></div>
+                        <div class="panel-footer"><button name="submit" value="Purchase" class="btn btn-primary">Purchase</button></div>
+                    </div>
+                </div>
+            }
+            @if (Model.Operations == OperationEnum.Purchase)
+            {
+
+                @if (Model.CashCredit == WebApplication1.Enums.CashCreditEnum.none)
+                {
+                    <div style="text-align:center">
+                        <input type="submit" name="submit" value="Cash" class="button" />
+                        <input type="submit" name="submit" value="Credit Card" class="button" />
+                    </div>
+                }
+                else
+                {
+                    <div style="text-align:center">
+                        <label><h4>Enter Amount:</h4></label> @Html.TextBoxFor(s => s.CashEntered, new { @class = "form-control", style = "width:30%;display:inline-block" })
+                        @Html.TextBoxFor(s => s.CashCredit, new { style = "display: none;" })
+                        <br />
+                        <div style="text-align:center; margin-top:10px;">
+                            <input type="submit" name="submit" value="Complete Purchase" class="button" />
+                        </div>
+
+                    </div>
+                }
+
+            }
+            else if (Model.Operations == OperationEnum.Restock)
+            {
+                <div>
+                    Number of cans:
+                    @Html.TextBoxFor(s => s.RestockNumber)
+                    <input type="submit" name="submit" class="btn btn-primary" value="Restock" style="text-align:center" />
+                </div>
+            }
+
+
+            <div>
+                <label style="color:green;margin-left:16px">@Html.DisplayFor(item => item.RefundMessage, null, new { @class = "form-control" })</label>
+                @*@Html.TextBoxFor(s => s.RefundMessage, new { style = "display: none;" })*@
+            </div>
+
+            <div >
+                <label style="color:red;margin-left:16px">@Html.DisplayFor(item => item.ErrorMessage, null, new { @class = "form-control" })</label>
+                @*@Html.TextBoxFor(s => s.ErrorMessage, new { style = "display: none;" })*@
+            </div>
+        </div>
+        <div class="col-xs-7 col-sm-3" >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+
+                    Current Stock
+                </div>
+
+                <div style="padding: 10px 15px;">
+                    <div>
+                        Total Cans Left:
+                        <label>@Html.DisplayFor(item => item.TotalCansLeft, null, new { @class = "form-control" })</label>
+                    </div>
+                    <div>
+                        Total Cans Sold:
+                        <label>@Html.DisplayFor(item => item.TotalCansSold, null, new { @class = "form-control" })</label>
+                    </div>
+                    <div>
+                        Total Cash Collected:
+                        <label>@Html.DisplayFor(item => item.TotalCashCollected, null, new { @class = "form-control" })</label>
+                    </div>
+                    <div>
+                        Total Credit Collected:
+                        <label>@Html.DisplayFor(item => item.TotalCreditCollected, null, new { @class = "form-control" })</label>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;" />
+
+            @*<div>
             Restock following number of cans:
             @Html.TextBoxFor(s => s.RestockNumber)
-            <input type="submit" name="submit" value="Complete Restock" />
-        </div>
-    }
-    else
-    {
-        <div>
-            <div>
-                Total Cans Left:
-                <label>@Html.DisplayFor(item => item.TotalCansLeft, null, new { @class = "form-control" })</label>
-            </div>
-            <div>
-                Total Cans Sold:
-                <label>@Html.DisplayFor(item => item.TotalCansSold, null, new { @class = "form-control" })</label>
-            </div>
-            <div>
-                Total Cash Collected:
-                <label>@Html.DisplayFor(item => item.TotalCashCollected, null, new { @class = "form-control" })</label>
-            </div>
-            <div>
-                Total Credit Collected:
-                <label>@Html.DisplayFor(item => item.TotalCreditCollected, null, new { @class = "form-control" })</label>
-            </div>
-        </div>
+            <input type="submit" name="submit" value="Restock" />
+        </div>*@
 
-        <input type="submit" name="submit" value="Purchase" />
-        <input type="submit" name="submit" value="Restock" />
-        @*<div>
-                Restock following number of cans:
-                @Html.TextBoxFor(s => s.RestockNumber)
-                <input type="submit" name="submit" value="Restock" />
-            </div>*@
-    }
-
-    <div>
-        <label>@Html.DisplayFor(item => item.RefundMessage, null, new { @class = "form-control" })</label>
-        @*@Html.TextBoxFor(s => s.RefundMessage, new { style = "display: none;" })*@
-    </div>
-
-    <div>
-        <label>@Html.DisplayFor(item => item.ErrorMessage, null, new { @class = "form-control" })</label>
-        @*@Html.TextBoxFor(s => s.ErrorMessage, new { style = "display: none;" })*@
-    </div>
 </form>
+        
+</body>
+
+</html>
 
 @*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Learn how to build ASP.NET apps that can run anywhere.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Learn how to build ASP.NET apps that can run anywhere.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        There are powerful new features in Visual Studio for building modern web apps.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/banner3.svg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="item">
-            <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    There are powerful new features in Visual Studio for building modern web apps.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="item">
-            <img src="~/images/banner3.svg" alt="Microsoft Azure" class="img-responsive" />
-            <div class="carousel-caption" role="option">
-                <p>
-                    Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
-                    <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
-                        Learn More
-                    </a>
-                </p>
-            </div>
-        </div>
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
 
-<div class="row">
-    <div class="col-md-3">
-        <h2>Application uses</h2>
-        <ul>
-            <li>Sample pages using ASP.NET Core MVC</li>
-            <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>How to</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Overview</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
-        </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Run &amp; Deploy</h2>
-        <ul>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
-            <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
-        </ul>
-    </div>
-</div>*@
+    <div class="row">
+        <div class="col-md-3">
+            <h2>Application uses</h2>
+            <ul>
+                <li>Sample pages using ASP.NET Core MVC</li>
+                <li>Theming using <a href="https://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>How to</h2>
+            <ul>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=398600">Add a Controller and View</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699315">Manage User Secrets using Secret Manager.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699316">Use logging to log a message.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699317">Add packages using NuGet.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699319">Target development, staging or production environment.</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Overview</h2>
+            <ul>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=518008">Conceptual overview of what is ASP.NET Core</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=699320">Fundamentals of ASP.NET Core such as Startup and middleware.</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=398602">Working with Data</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkId=398603">Security</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=699321">Client side development</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=699322">Develop on different platforms</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=699323">Read more on the documentation site</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <h2>Run &amp; Deploy</h2>
+            <ul>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=517851">Run your app</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=517853">Run tools such as EF migrations and more</a></li>
+                <li><a href="https://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Apps</a></li>
+            </ul>
+        </div>
+    </div>*@

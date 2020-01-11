@@ -3,6 +3,7 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-image: url('../images/vendingmachine.jpg');
 }
 
 /* Wrapping element */
@@ -10,6 +11,7 @@ body {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    /*background-image: url('../images/vendingmachine.jpg');*/
 }
 
 /* Carousel */
@@ -22,6 +24,31 @@ body {
 .carousel-inner .item img[src$=".svg"] {
     width: 100%;
 }
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px #999;
+}
+
+    .button:hover {
+        background-color: #3e8e41
+    }
+
+    .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(1px);
+    }
 
 /* QR code generator */
 #qrCode {
