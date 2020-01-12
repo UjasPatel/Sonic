@@ -54,7 +54,7 @@
                 else
                 {
                     <div style="text-align:center">
-                        <h4>Enter Amount:</h4> @Html.TextBoxFor(s => s.CashEntered, new { @class = "form-control", style = "width:30%;display:inline-block", @type = "number", @min = "0" })
+                        <h4>Enter Amount:</h4> @Html.TextBoxFor(s => s.CashEntered, new { @class = "form-control", style = "width:30%;display:inline-block", @type = "number", @min = "0", step = ".01" })
                         @Html.TextBoxFor(s => s.CashCredit, new { style = "display: none;" })
                         <br />
                         <div style="text-align:center; margin-top:10px;">
@@ -69,7 +69,7 @@
             {
                 <div>
                     Number of cans:
-                    @Html.TextBoxFor(s => s.RestockNumber, new { @class = "form-control", style = "width:15%;display:inline-block", @type = "number", @min = "0" })
+                    @Html.TextBoxFor(s => s.RestockNumber, new { @class = "form-control", style = "width:15%;display:inline-block", @type = "number", @min = "0", step = ".01" })
                     <input type="submit" name="submit" class="btn btn-primary" value="Complete Restock" style="text-align:center" />
                 </div>
             }
