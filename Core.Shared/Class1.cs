@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApplication1
+namespace Core.Shared
 {
-    public enum OperationEnum
+    public class Class1
     {
-        Home,
-        Purchase,
-        Restock
     }
 }

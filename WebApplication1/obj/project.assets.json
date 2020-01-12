@@ -4333,6 +4333,27 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
+      },
+      "Core/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "Core.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.dll": {}
+        }
+      },
+      "Core.Shared/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/Core.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Core.Shared.dll": {}
+        }
       }
     }
   },
@@ -11491,10 +11512,22 @@
         "system.xml.xpath.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xdocument.nuspec"
       ]
+    },
+    "Core/1.0.0": {
+      "type": "project",
+      "path": "../Core/Core.csproj",
+      "msbuildProject": "../Core/Core.csproj"
+    },
+    "Core.Shared/1.0.0": {
+      "type": "project",
+      "path": "../Core.Shared/Core.Shared.csproj",
+      "msbuildProject": "../Core.Shared/Core.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
+      "Core >= 1.0.0",
+      "Core.Shared >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.AspNetCore.Razor.Design >= 2.1.2",
       "Microsoft.NETCore.App >= 2.1.0"
@@ -11529,7 +11562,14 @@
       },
       "frameworks": {
         "netcoreapp2.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Sonic\\Core.Shared\\Core.Shared.csproj": {
+              "projectPath": "C:\\Sonic\\Core.Shared\\Core.Shared.csproj"
+            },
+            "C:\\Sonic\\Core\\Core.csproj": {
+              "projectPath": "C:\\Sonic\\Core\\Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

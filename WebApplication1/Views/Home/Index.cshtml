@@ -6,15 +6,12 @@
 <html>
 <body> 
     <h1 style="text-align:center">Vending Machine</h1>
-    <form method="post">       
-        @*<hr style="    margin-top: 20px;
-            margin-bottom: 20px;
-            border: 0; " />*@
+    <form method="post"> 
         <div class="col-xs-7 col-sm-9">
             
             <div style="text-align:right;margin-bottom:10px;margin-right:16px;">
                 <input type="submit" name="submit" value="Home" class="btn btn-primary" />
-                @if (Model.Operations == OperationEnum.Home)
+                @if (Model.Operations == Core.Shared.Enums.OperationEnum.Home)
                 {
                     <input type="submit" name="submit" value="Restock" class="btn btn-primary" />
                 }    
@@ -37,17 +34,17 @@
                         <div class="panel-body"><img src="@String.Format("images/img-{0}.jpg",@i)" style="height:60px" class="img-rounded img-responsive center-block"></div>
                         <div class="panel-footer">
                                 <button name="submit" value="Purchase" class="btn btn-primary"
-                                         @{ if(Model.Operations != OperationEnum.Home) { 
+                                         @{ if(Model.Operations != Core.Shared.Enums.OperationEnum.Home) { 
                                                  @:disabled="disabled" 
                                             } }>Purchase</button>
                         </div>
                     </div>
                 </div>
             }
-            @if (Model.Operations == OperationEnum.Purchase)
+            @if (Model.Operations == Core.Shared.Enums.OperationEnum.Purchase)
             {
 
-                @if (Model.CashCredit == WebApplication1.Enums.CashCreditEnum.none)
+                @if (Model.CashCredit == Core.Shared.Enums.CashCreditEnum.none)
                 {
                     <div style="text-align:center">
                         <input type="submit" name="submit" value="Cash" class="button" />
@@ -57,7 +54,7 @@
                 else
                 {
                     <div style="text-align:center">
-                        <label><h4>Enter Amount:</h4></label> @Html.TextBoxFor(s => s.CashEntered, new { @class = "form-control", style = "width:30%;display:inline-block" })
+                        <h4>Enter Amount:</h4> @Html.TextBoxFor(s => s.CashEntered, new { @class = "form-control", style = "width:30%;display:inline-block" })
                         @Html.TextBoxFor(s => s.CashCredit, new { style = "display: none;" })
                         <br />
                         <div style="text-align:center; margin-top:10px;">
@@ -68,7 +65,7 @@
                 }
 
             }
-            else if (Model.Operations == OperationEnum.Restock)
+            else if (Model.Operations == Core.Shared.Enums.OperationEnum.Restock)
             {
                 <div>
                     Number of cans:
@@ -79,13 +76,11 @@
 
 
             <div>
-                <label style="color:green;margin-left:16px">@Html.DisplayFor(item => item.RefundMessage, null, new { @class = "form-control" })</label>
-                @*@Html.TextBoxFor(s => s.RefundMessage, new { style = "display: none;" })*@
+                <label style="color:green;margin-left:16px">@Html.DisplayFor(item => item.RefundMessage, null, new { @class = "form-control" })</label>               
             </div>
 
             <div >
                 <label style="color:red;margin-left:16px">@Html.DisplayFor(item => item.ErrorMessage, null, new { @class = "form-control" })</label>
-                @*@Html.TextBoxFor(s => s.ErrorMessage, new { style = "display: none;" })*@
             </div>
         </div>
         <div class="col-xs-7 col-sm-3" >
@@ -114,16 +109,8 @@
                     </div>
                 </div>
             </div>
-            <hr style="margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;" />
-
-            @*<div>
-            Restock following number of cans:
-            @Html.TextBoxFor(s => s.RestockNumber)
-            <input type="submit" name="submit" value="Restock" />
-        </div>*@
-
+        </div>
+           
     </form>        
 </body>
 </html>

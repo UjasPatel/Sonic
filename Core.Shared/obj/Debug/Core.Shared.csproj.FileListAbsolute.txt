@@ -1,0 +1,6 @@
+C:\Sonic\Core.Shared\bin\Debug\Core.Shared.dll
+C:\Sonic\Core.Shared\bin\Debug\Core.Shared.pdb
+C:\Sonic\Core.Shared\obj\Debug\Core.Shared.csprojAssemblyReference.cache
+C:\Sonic\Core.Shared\obj\Debug\Core.Shared.csproj.CoreCompileInputs.cache
+C:\Sonic\Core.Shared\obj\Debug\Core.Shared.dll
+C:\Sonic\Core.Shared\obj\Debug\Core.Shared.pdb

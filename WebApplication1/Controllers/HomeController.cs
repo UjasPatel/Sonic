@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
-using System.Web;
 using Microsoft.AspNetCore.Http;
-using WebApplication1.Interface;
+using Core.Shared.Interface;
+using Core.Shared.Enums;
+using Core.Shared.Dto;
+using System;
 
 namespace WebApplication1.Controllers
 {
@@ -41,172 +39,146 @@ namespace WebApplication1.Controllers
             switch (submit)
             {
                 case "Purchase":
-                    ModelState.Clear();                    
-                    model.Operations = OperationEnum.Purchase;                    
-                    return View(model);
-                case "Restock":                    
-                    ModelState.Clear();  
-                    model.Operations = OperationEnum.Restock;
-                    return View(model);
+                    return StartPurchase(model);                    
+                case "Restock":
+                    return StartRestock(model);                    
                 case "Complete Restock":
-                    if (model.RestockNumber == null)
-                    {
-                        model.ErrorMessage = "Error: Please enter number of cans to restock and Try Again!!";
-                        return View(model);
-                    }
-                    if (model.TotalCansLeft + model.RestockNumber > 20)
-                    {
-                        model.ErrorMessage = "Error: Only 20 cans can be inserted in vending machine at a time";
-                        return View(model);
-                    }
-                    ModelState.Clear();
-                    model.TotalCansLeft += model.RestockNumber;
-                    model.TotalCashCollected = 0;
-                    model.TotalCreditCollected = 0;
-                    model.TotalCansSold = 0;
-                    model.Operations = OperationEnum.Home;
-                    return View(model);
+                    return CompleteRestock(model);                   
                 case "Complete Purchase":
-                    if(model.CashEntered == null)
-                    {
-                        model.ErrorMessage = "Please enter an amount to buy a can.";
-                        return View(model);
-                    }
-
-                    if (model.CashEntered < 4.5)
-                    {
-                        model.ErrorMessage = "Money entered was not enough. Please enter atleast 4.5$ in the machine. Please collect your change and try again!!";
-                        return View(model);
-                    }
-
-                    if (model.TotalCansLeft == 0)
-                    {
-                        model.ErrorMessage = "Sorry for inconvenience!! We have no cans left in machine anymore.";
-                        return View(model);
-                    }
-
-                    ModelState.Clear();
-                    model.RefundMessage = _vendingMachineOperations.TakeMoneyAndRefund("a", 4.5, model.CashEntered.Value);
-                    model.TotalCansLeft -= 1;
-                    model.TotalCansSold += 1;
-                    if (model.CashCredit == Enums.CashCreditEnum.cash)
-                    {
-                        model.TotalCashCollected += 4.5;
-                    }
-                    else if (model.CashCredit == Enums.CashCreditEnum.credit)
-                    {
-                        model.TotalCreditCollected += 4.5;
-                    }
-                    return View(model);
+                    return CompletePurchase(model);                    
                 case "Cash":
-                    ModelState.Clear();
-                    model.Operations = OperationEnum.Purchase;
-                    model.CashCredit = Enums.CashCreditEnum.cash;
-                    return View(model);
+                    return StartCashTransaction(model);                    
                 case "Credit Card":
-                    ModelState.Clear();
-                    model.Operations = OperationEnum.Purchase;
-                    model.CashCredit = Enums.CashCreditEnum.credit;
-                    return View(model);
+                    return CreditCardTransaction(model);                   
                 default:
                     return View(model);
             }            
         }
 
-        public IActionResult About()
+        #region "Helpers"
+        /// <summary>
+        /// When Credit Card transaction is selected it asks for amount
+        /// </summary>
+        /// <param name="model">object that contains information</param>
+        /// <returns></returns>
+        private ActionResult CreditCardTransaction(VendingMachineViewModel model)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            ModelState.Clear();
+            model.Operations = OperationEnum.Purchase;
+            model.CashCredit = CashCreditEnum.credit;
+            return View(model);
         }
 
-        public IActionResult Contact()
+        /// <summary>
+        /// When Cash transaction is selected it asks for amount
+        /// </summary>
+        /// <param name="model">object that contains information</param>
+        /// <returns></returns>
+        private ActionResult StartCashTransaction(VendingMachineViewModel model)
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
+            ModelState.Clear();
+            model.Operations = OperationEnum.Purchase;
+            model.CashCredit = CashCreditEnum.cash;
+            return View(model);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
+        /// <summary>
+        /// Completes purchase process
+        /// reduces cans left by 1 and ejects a can
+        /// Adds Cash or credit card amount.
+        /// Adds 1 to number of cans sold
+        /// </summary>
+        /// <param name="model">object that contains information</param>
+        /// <returns></returns>
+        private ActionResult CompletePurchase(VendingMachineViewModel model)
+        {     
+            ModelState.Clear();
+            // Call API to perform transaction
+            model = TransferDtoToModel(_vendingMachineOperations.TakeMoneyAndRefund(ModelToTransferDto(model)));          
+            return View(model);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        /// <summary>
+        /// Completes the restock process by adding number of cans
+        /// entered by user to existing cans
+        /// </summary>
+        /// <param name="model">object that contains information</param>
+        /// <returns></returns>
+        private ActionResult CompleteRestock(VendingMachineViewModel model)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ModelState.Clear();
+            // Call API to perform restock operation
+            model = TransferDtoToModel(_vendingMachineOperations.Restock(ModelToTransferDto(model)));
+            return View(model);
         }
 
-        // Call this when first load of the page is done
-        // Provide a button to do this if refresh is required
-        //public void SetPersistentCookiesOnStartup()
-        //{
-        //    CookieOptions option = new CookieOptions();
+        /// <summary>
+        /// Starts restock operation, shows option to enter number of cans
+        /// </summary>
+        /// <param name="model">object that contains information</param>
+        /// <returns></returns>
+        private ActionResult StartRestock(VendingMachineViewModel model)
+        {
+            ModelState.Clear();
+            model.Operations = OperationEnum.Restock;
+            return View(model);
+        }
 
-        //    Response.Cookies.Append("TotalCans", "20", option);
-        //    Response.Cookies.Append("TotalCash", "0", option);
-        //    Response.Cookies.Append("TotalCredit", "0", option);
-        //}
+        /// <summary>
+        /// Starts Purchase operation, shows option to select Cash or credit card
+        /// </summary>
+        /// <param name="model">object that contains information</param>
+        /// <returns></returns>
+        private ActionResult StartPurchase(VendingMachineViewModel model)
+        {
+            ModelState.Clear();
+            model.Operations = OperationEnum.Purchase;
+            return View(model);
+        }
 
-        ///// <summary>
-        ///// If money that is paid is more than price than return money to be refunded
-        ///// </summary>
-        ///// <param name="canFlavour"></param>
-        ///// <param name="price"></param>
-        ///// <param name="paidMoney"></param>
-        ///// <returns></returns>
-        //public string TakeMoneyAndRefund(string canFlavour, double price, double paidMoney)
-        //{
-        //    if (paidMoney > price)
-        //    {
-        //        // need to deduct available stock by 1
-        //        return (paidMoney - price).ToString();
-        //    }
-        //    else if( paidMoney == price)
-        //    {
-        //        // need to deduct available stock by 1
-        //        return "0";
-        //    }
-        //    return (price - paidMoney).ToString() + " still required to buy a can";
-        //}
+        /// <summary>
+        /// Mapping a TransferDto to View model for display on View
+        /// </summary>
+        /// <param name="transferDto"></param>
+        /// <returns></returns>
+        private VendingMachineViewModel TransferDtoToModel(TransferDto transferDto)
+        {
+            return new VendingMachineViewModel
+            {
+                TotalCansLeft = transferDto.TotalCansLeft,
+                TotalCashCollected = transferDto.TotalCashCollected,
+                TotalCreditCollected = transferDto.TotalCreditCollected,
+                RefundMessage = transferDto.RefundMessage,
+                RestockNumber = transferDto.RestockNumber,
+                TotalCansSold = transferDto.TotalCansSold,
+                CashEntered = transferDto.CashEntered,
+                ErrorMessage = transferDto.ErrorMessage,
+                Operations = transferDto.Operations,
+                CashCredit = transferDto.CashCredit
+            };
+        }
 
-        ///// <summary>
-        ///// Just for Display
-        ///// </summary>
-        ///// <returns></returns>
-        //public List<string> GetCanFlavours()
-        //{
-        //    var flavours = new List<string>();
-        //    flavours.Add("a");
-        //    flavours.Add("b");
-        //    flavours.Add("c");
-        //    flavours.Add("d");
-        //    flavours.Add("e");
-        //    flavours.Add("f");
-        //    flavours.Add("g");
-        //    flavours.Add("h");
-        //    flavours.Add("i");
-        //    flavours.Add("j");
-        //    return flavours;
-        //}
-
-        ///// <summary>
-        ///// How many cans are still available in the machine
-        ///// </summary>
-        ///// <returns></returns>
-        //public int GetCurrentCanStocks()
-        //{
-        //    // return total number of cans still available in machine
-        //    return 0;
-        //}
-
-        //public void RestockMachine(int cans)
-        //{
-        //    // set the cash held in machine to 0
-        //    // set the amount payed by credit card to 0
-        //    // set number of cans sold
-        //    // number of cans added to the availabkle cans
-        //}
+        /// <summary>
+        /// Mapping a View Model to TransferDto for performing operations
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private TransferDto ModelToTransferDto(VendingMachineViewModel model)
+        {
+            return new TransferDto
+            {
+                TotalCansLeft = model.TotalCansLeft,
+                TotalCashCollected = model.TotalCashCollected,
+                TotalCreditCollected = model.TotalCreditCollected,
+                RefundMessage = model.RefundMessage,
+                RestockNumber = model.RestockNumber,
+                TotalCansSold = model.TotalCansSold,
+                CashEntered = model.CashEntered,
+                ErrorMessage = model.ErrorMessage,
+                Operations = model.Operations,
+                CashCredit = model.CashCredit
+            };
+        }
+        #endregion
     }
 }
